@@ -26,7 +26,6 @@ function dijkstra(start, goal, graph) {
     const priorityQueue = [[start, 0]], pathTracking = {};
 
     while (priorityQueue.length) {
-        priorityQueue.sort((a, b) => a[1] - b[1])
 
         const [currentNode, currentNodeWeight] = priorityQueue.shift();
 
@@ -45,6 +44,14 @@ function dijkstra(start, goal, graph) {
             }
 
         }
+        /**
+         * sorting the queue in every iteration is not a good practice and not optimized
+         * approach either. Since Javascript don't have priority queue, we'll have to create one
+         * before using it. For the sake of learning, we are just sorting it to achieve the same
+         * functionality. In real world scenerio, we'll have to use the priority queue data
+         * structure or min-queue data structure.
+         */
+        priorityQueue.sort((a, b) => a[1] - b[1])
     }
 
     // If the goal is unreachable
