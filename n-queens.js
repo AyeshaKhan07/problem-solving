@@ -66,7 +66,7 @@ function solutionExist(moves, n, x = 0, y = 0, queenBlocks = []) {
         return false
     }
 
-    if (queenBlocks.length >= 4) {
+    if (queenBlocks.length >= n) {
         return queenBlocks
     }
 
