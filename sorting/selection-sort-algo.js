@@ -3,6 +3,7 @@
  * smallest element and then place it at the first index then we iterate over the next elements 
  * and find the second smallest and place it on the second index. The process continues until the 
  * array gets sorted.
+ * further reading: https://docs.google.com/document/d/1HLFlERINHQ9FlAMYYLvfa2_vHdrKUc6xoxYr-fu5zXQ/edit?tab=t.0#heading=h.716olybtp1k0
  */
 function sort(array) {
     for (let i = 0; i < array.length; i++) {
