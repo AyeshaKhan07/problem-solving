@@ -13,7 +13,7 @@
 
 const { readFileAsStream } = require("../file-manager.cjs");
 
-const testFileName = "chess-italian-opening"
+const testFileName = "big-box"
 
 readFileAsStream(`./sand-fall-tests/${testFileName}.txt`)
     .then(content => sandFall(content))
