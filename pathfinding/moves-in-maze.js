@@ -9,44 +9,56 @@
  * The input maze is made of # for walls, . for free spaces and S for the starting position.
  * The output must be made of # for walls, . for unreachable points, and numbers 0-9, A-Z.
  */
-const maze = [
-    ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', 'S', '.', '.', '.', '.', '.', '.', '.', '#'],
-    ['#', '#', '.', '#', '#', '#', '#', '#', '.', '#'],
-    ['#', '#', '.', '#', '.', '.', '.', '.', '.', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#']
-]
-const resultantMaze = []; let startingPosition = [], h = 5, w = 10
-const hexatrigesimalNumbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-for (let i = 0; i < h; i++) {
-    const ROW = maze[i];
-    const startingIndex = ROW.indexOf("S")
-    if (startingIndex >= 0)
-        startingPosition = [i, startingIndex];
-    // maze.push(ROW.split(""))
-}
-const shortestPaths = bfs(startingPosition)
 
-for (const goal in shortestPaths) {
-    const [x, y] = goal.split(",")
-    if (shortestPaths[goal] == "None")
-        maze[x][y] = 0
+const { readFileAsStream } = require("../file-manager.cjs");
+const { spawn } = require("child_process");
+const child = spawn('ls', ['./moves-in-maze-testcases']);
 
-    else {
-        const [prevX, prevY] = shortestPaths[goal].split(",")
-        maze[x][y] = hexatrigesimalNumbers[hexatrigesimalNumbers.indexOf(maze[prevX][prevY]) + 1]
+child.stdout.on('data', (data) => {
+    const testFiles = data.toString().trimEnd().split("\n")
+    for (const testFile of testFiles) {
+
+        readFileAsStream(`./moves-in-maze-testcases/${testFile}`)
+            .then(content => { console.log("\nExecuting testcase:", testFile, "\n"); movesInMaze(content) })
+            .catch(err => console.error('Error reading file:', err));
     }
-}
-maze.map(row => console.log(row.join("")))
+});
+function movesInMaze(input) {
+    const data = input.split("\n")
+    const [h, w] = data[0].split(" ").map(Number)
+    let startingPosition = []
+    const maze = []
+    const hexatrigesimalNumbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for (let i = 1; i <= h; i++) {
+        const ROW = data[i];
+        const startingIndex = ROW.indexOf("S")
+        if (startingIndex >= 0)
+            startingPosition = [i-1, startingIndex];
+        maze.push(ROW.split(""))
+    }
+    const shortestPaths = bfs(startingPosition, h, w, maze)
 
-function bfs(start) {
+    for (const goal in shortestPaths) {
+        const [x, y] = goal.split(",")
+        if (shortestPaths[goal] == "None")
+            maze[x][y] = 0
+
+        else {
+            const [prevX, prevY] = shortestPaths[goal].split(",")
+            maze[x][y] = hexatrigesimalNumbers[hexatrigesimalNumbers.indexOf(maze[prevX][prevY]) + 1]
+        }
+    }
+    maze.map(row => console.log(row.join("")))
+}
+
+function bfs(start, h, w, maze) {
     const queue = [start]
     const visited = { [start.join(",")]: "None" }
 
     while (queue.length) {
         const currentNode = queue.shift()
 
-        const adjacentNodes = getAdjacentNodes(currentNode[0], currentNode[1])
+        const adjacentNodes = getAdjacentNodes(currentNode[0], currentNode[1], h, w)
         for (const node of adjacentNodes) {
             if (!(Object.keys(visited).includes(node.join(","))) && maze[node[0]][node[1]] !== "#") {
                 queue.push(node)
@@ -57,7 +69,7 @@ function bfs(start) {
     return visited
 }
 
-function getAdjacentNodes(x, y) {
+function getAdjacentNodes(x, y, h, w) {
     const nodes = []
 
     if (x - 1 >= 0)
@@ -78,49 +90,3 @@ function getAdjacentNodes(x, y) {
 
     return nodes
 }
-
-// testcases
-/**
- * 01. h = 5, w = 10
- * ##########
- * #S.......#
- * ##.#####.#
- * ##.......#
- * ##########
- * output:
- * ##########
- *#01234567#
- * ##2#####8#
- * ##3456789#
- * ##########
- * 
- * 02. h = 5, w = 10
- * #.########
- * #.##..####
- * ..##..#...
- * ####..#S##
- * #....#####
- * output:
- * #7########
- * #6##EF####
- * 45##DE#123
- * ####CD#0##
- * #89AB#####
- * 
- * 03: h = 7, w = 19
- * ....#...#..........
- * ....#####..........
- * ....#...#..........
- * ....#.#.#..........
- * ......#............
- * ...S#####..........
- * ....#...#..........
- * output:
- * 5432#...#EEDCBA9876
- * 6543#####EFEDCBA987
- * 6543#567#DEEDCBA987
- * 5432#4#8#CDDCBA9876
- * 432123#9ABCCBA98765
- * 3210#####CCBA987654
- * 4321#...#DDCBA98765
- */
