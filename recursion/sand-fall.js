@@ -12,13 +12,18 @@
  */
 
 const { readFileAsStream } = require("../file-manager.cjs");
+const { spawn } = require("child_process");
+const child = spawn('ls', ['./sand-fall-tests']);
 
-const testFileName = "big-box"
-
-readFileAsStream(`./sand-fall-tests/${testFileName}.txt`)
-    .then(content => sandFall(content))
-    .catch(err => console.error('Error reading file:', err));
-
+child.stdout.on('data', (data) => {
+    const testFiles = data.toString().trimEnd().split("\n")
+    for (const testFile of testFiles) {
+        
+        readFileAsStream(`./sand-fall-tests/${testFile}`)
+            .then(content => {console.log("Executing testcase:", testFile,"\n"); sandFall(content)})
+            .catch(err => console.error('Error reading file:', err));
+    }
+});
 
 function sandFall(input) {
     const data = input.split("\n")
