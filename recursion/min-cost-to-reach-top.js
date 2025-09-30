@@ -13,4 +13,13 @@ function minCost(array, index = 0) {
 function findMinCost(array) {
     return Math.min(minCost(array), minCost(array, 1))
 }
-console.log(findMinCost([1, 100, 1, 1, 1, 100, 1, 1, 100, 1]))
+console.time()
+console.log(findMinCost([1, 100, 1, 1, 1, 100, 1, 1, 100, 1, 100, 100]))
+console.timeEnd()
+
+/**
+ * This solution will not work for larger arrays, or it would work but
+ * extremely slow. The better approach would be to solve this with
+ * dynamic programming. See the two different approaches in dynamic
+ * programming folder.
+ */
