@@ -32,6 +32,6 @@ function findMinCost() {
     const memo = new Array(array.length).fill(-1)
     return Math.min(minCost(array, memo), minCost(array, memo, 1))
 }
-console.time()
+console.time("Execution time")
 console.log(findMinCost())
-console.timeEnd()
+console.timeEnd("Execution time")
