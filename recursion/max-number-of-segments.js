@@ -1,3 +1,14 @@
+/**
+ * Given a rod of length n, the task is to cut the rod in such a way that the total
+ * number of segments of length x, y, and z is maximized. The segments can only be
+ * of length x, y, and z. Note: If no segment can be cut then return 0.
+ * @param {*} n 
+ * @param {*} x 
+ * @param {*} y 
+ * @param {*} z 
+ * @param {*} segmentCount 
+ * @returns 
+ */
 function maxCutHelper(n, x, y, z, segmentCount = 0) {
     if (n < 0) return -1
     if (n == 0) return segmentCount
