@@ -1,5 +1,5 @@
 /* Memoization Approach (Top Down Approach)
-* You can run pass the n while running the code. If you wanna find the
+* You can pass the n while running the code. If you wanna find the
 * fibonacci sequence at index 100, use command: 
 * "node fibonacci-numbers.js 100" 
 */
